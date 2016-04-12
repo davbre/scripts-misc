@@ -2,8 +2,10 @@ require 'csv'
 require 'fileutils'
 require 'yaml'
 require 'pry'
+require 'date'
 
-projects_dir = ENV['HOME'] + "/webdev/okfn.github.com/projects/_posts/"
+projects_dir = ENV['HOME'] + "//webdev/okfn/_proj_temp/projects/_posts/"
+csv_outfile = "output/okfnlabs-projects-metadata" + Date.today.to_s + ".csv"
 
 # Create a projects hash with one key per project. Each key will map to another
 # hash containing the projects metadata and its content
@@ -52,17 +54,19 @@ projects.each do |pkey,pval|
     end
   end
 
-  pval.has_key?("content") ? row << pval["content"] : row << ""
+  # pval.has_key?("content") ? row << pval["content"] : row << ""
+  # binding.pry
   csvgrid << row
 
 end
 
+# binding.pry
 sorted_csvgrid = csvgrid.sort_by { |e| e[0] }
 
 # write to csv file
-CSV.open("output/okfnlabs-projects-metadata.csv","wb") do |csv|
+CSV.open(csv_outfile,"wb") do |csv|
   # write csv header line
-  csv << ["project"] + csv_columns.keys + ["content"]
+  csv << ["project"] + csv_columns.keys # + ["content"]
 
 
   sorted_csvgrid.each do |csvrow|
